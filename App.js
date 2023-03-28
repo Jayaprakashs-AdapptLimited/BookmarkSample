@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, ScrollView, Image} from 'react-native';
 import Header from './components/header';
 import SwitchSelector from 'react-native-switch-selector';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -26,14 +26,35 @@ const formattedDates = `${years}-${months}-${days}`;
 
 const tabs = [
   {label: 'All', value: '1', testID: 'All'},
-  {label: 'Laboratory', value: '2', testID: 'Laboratory'},
-  {label: 'Diagnostics', value: '3', testID: 'Diagnostics'},
-  {label: 'Field Works', value: '4', testID: 'Field Works'},
+  {
+    label: 'Laboratory',
+    value: '2',
+    testID: 'Laboratory',
+    source: require('./images/lab.png'),
+  },
+  {
+    label: 'Diagnostics',
+    value: '3',
+    testID: 'Diagnostics',
+    source: require('./images/diagnosis.png'),
+  },
+  {
+    label: 'Field Works',
+    value: '4',
+    testID: 'Field Works',
+    source: require('./images/field.png'),
+  },
 ];
 
 const maping = tabs.map(each => {
   return each.label;
 });
+
+const imageMap = tabs.map(each => {
+  return each.source;
+});
+
+console.log(imageMap);
 
 const bookmarks = [
   {
@@ -319,13 +340,7 @@ const App = () => {
 
       <View style={styles.lineStyle} />
       <View style={styles.ListTitle}>
-        <Icon
-          style={styles.bookmarkIconStyle}
-          name="calendar"
-          size={18}
-          color="white"
-        />
-
+        <Image source={imageMap[index]} style={{width: 30, height: 30}} />
         <Text style={styles.textTitle}>{maping[index]}</Text>
       </View>
 
@@ -336,27 +351,27 @@ const App = () => {
 
         <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
       </View>
-      <View style={{height: 480}}> 
-      <ScrollView>
-        <View style={styles.listView}>
-          {filteredList[0].map((item, index) => (
-            <Item
-              title={item.name}
-              date={item.date}
-              time={item.time}
-              tool={item.tool}
-            />
-          ))}
-        </View>
-
-        <View style={styles.todayWrapper}>
-          <View>
-            <Text style={styles.yesterdayTextStyle}>Yesterday</Text>
+      <View style={{height: 480}}>
+        <ScrollView>
+          <View style={styles.listView}>
+            {filteredList[0].map((item, index) => (
+              <Item
+                title={item.name}
+                date={item.date}
+                time={item.time}
+                tool={item.tool}
+              />
+            ))}
           </View>
 
-          <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
-        </View>
-        <View>
+          <View style={styles.todayWrapper}>
+            <View>
+              <Text style={styles.yesterdayTextStyle}>Yesterday</Text>
+            </View>
+
+            <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
+          </View>
+          <View>
             {filteredList[1].map((item, index) => (
               <Item
                 title={item.name}
@@ -365,16 +380,16 @@ const App = () => {
                 tool={item.tool}
               />
             ))}
-        </View>
-
-        <View style={styles.yesterdayWrapper}>
-          <View>
-            <Text style={styles.yesterdayTextStyle}>Previous</Text>
           </View>
 
-          <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
-        </View>
-        <View>
+          <View style={styles.yesterdayWrapper}>
+            <View>
+              <Text style={styles.yesterdayTextStyle}>Previous</Text>
+            </View>
+
+            <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
+          </View>
+          <View>
             {filteredList[2].map((item, index) => (
               <Item
                 title={item.name}
@@ -383,8 +398,8 @@ const App = () => {
                 tool={item.tool}
               />
             ))}
-        </View>
-      </ScrollView>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
