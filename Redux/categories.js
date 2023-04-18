@@ -22,9 +22,9 @@ const storeData = async (staticArray, staticData, initialLanguage) => {
 
 const getData = async initialLanguage => {
   const dataEnglish = await fs.readFileAssets('data/en.json', 'utf8');
-  const variEnglish = JSON.parse(dataEnglish);
+  const varEnglish = JSON.parse(dataEnglish);
   const dataFrench = await fs.readFileAssets('data/fr.json', 'utf8');
-  const variFrensh = JSON.parse(dataFrench);
+  const varFrench = JSON.parse(dataFrench);
 
   const today = new Date();
   const year = today.getFullYear();
@@ -39,32 +39,32 @@ const getData = async initialLanguage => {
   const days = yesterday.getDate();
   const formattedDates = `${years}-${months}-${days}`;
 
-  for (let i = 0; i < variEnglish.length; i++) {
+  for (let i = 0; i < varEnglish.length; i++) {
     if (i < 3) {
-      variEnglish[i]['date'] = formattedDate;
-      variEnglish[i]['key'] = i;
+      varEnglish[i]['date'] = formattedDate;
+      varEnglish[i]['key'] = i;
     } else if (i < 6) {
-      variEnglish[i]['date'] = formattedDates;
-      variEnglish[i]['key'] = i;
+      varEnglish[i]['date'] = formattedDates;
+      varEnglish[i]['key'] = i;
     } else {
-      variEnglish[i]['date'] = '2023-3-7';
-      variEnglish[i]['key'] = i;
+      varEnglish[i]['date'] = '2023-3-7';
+      varEnglish[i]['key'] = i;
     }
   }
-  for (let i = 0; i < variFrensh.length; i++) {
-    if (i < 1) {
-      variFrensh[i]['date'] = formattedDate;
-      variFrensh[i]['key'] = i;
-    } else if (i < 2) {
-      variFrensh[i]['date'] = formattedDates;
-      variFrensh[i]['key'] = i;
+  for (let i = 0; i < varFrench.length; i++) {
+    if (i < 3) {
+      varFrench[i]['date'] = formattedDate;
+      varFrench[i]['key'] = i;
+    } else if (i < 6) {
+      varFrench[i]['date'] = formattedDates;
+      varFrench[i]['key'] = i;
     } else {
-      variFrensh[i]['date'] = '2023-3-7';
-      variFrensh[i]['key'] = i;
+      varFrench[i]['date'] = '2023-3-7';
+      varFrench[i]['key'] = i;
     }
   }
-  const staticArray = variEnglish;
-  const staticData = variFrensh;
+  const staticArray = varEnglish;
+  const staticData = varFrench;
 
   try {
     const jsonEng = await AsyncStorage.getItem('EngArray');
@@ -101,7 +101,7 @@ const arraySlice = createSlice({
   },
   extraReducers: {
     [fetchCategories.fulfilled]: (state, action) => {
-      state.data = action.payload; 
+      state.data = action.payload;
     },
     [fetchCategories.pending]: state => {
       state.status = 'Fetching data. Please wait a moment...';

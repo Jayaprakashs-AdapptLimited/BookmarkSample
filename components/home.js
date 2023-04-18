@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchCategories} from '../Redux/categories';
 import translations from '../translations';
 import {useRoute} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Home = () => {
   const langEns = useSelector(state => state.language);
@@ -34,6 +35,7 @@ const Home = () => {
       label: langEns.data === 'en' ? English.All : French.All,
       value: '1',
       testID: 'All',
+      source: require('../images/diagnosis.png'),
     },
     {
       label: langEns.data === 'en' ? English.Laboratory : French.Laboratory,
@@ -94,7 +96,7 @@ const Home = () => {
         day: fetchData != null ? 'Today' : [],
         data:
           fetchData != null
-            ? fetchData.filter(f => f.date == formattedDate)
+            ? fetchData.filter(f => f.date === formattedDate)
             : [],
       },
       {
@@ -107,7 +109,7 @@ const Home = () => {
       {
         day: 'Previous',
         data:
-          fetchData != null ? fetchData.filter(f => f.date == '2023-3-7') : [],
+          fetchData != null ? fetchData.filter(f => f.date === '2023-3-7') : [],
       },
     ];
     setFilteredList(value);
@@ -157,53 +159,73 @@ const Home = () => {
     }
   };
   return (
-    <View style={styles.container}>
-      <Header />
-      <View style={styles.selectorTab}>
-        <SwitchSelector
-          options={tabs}
-          initial={0}
-          backgroundColor="#00517c"
-          textColor="#4d87a4"
-          selectedColor="white"
-          buttonColor="#00324b"
-          onPress={value => clickHandler(value)}
-        />
-      </View>
-      <View style={styles.lineStyle} />
-      <View style={styles.ListTitle}>
-        <Image source={imageMap[index]} style={{width: 30, height: 30}} />
-        <Text style={styles.textTitle}>{maping[index]}</Text>
-      </View>
-      <View style={styles.todayWrapper}>
-        <View style={{flex: 1, height: 1, backgroundColor: '#407792'}} />
-      </View>
-      <View style={{height: 480}}>
-        <ScrollView>
+    <View style={{flex: 1}}>
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#004263', '#105c7e', '#408ab3']}
+          style={{
+            borderWidth: 0,
+            borderBottomLeftRadius: 35,
+            borderBottomRightRadius: 35,
+            marginLeft: 8,
+            marginRight: 8,
+          }}>
           <View>
-            {filteredList?.map((item, index) => (
-              <View>
+            <Header />
+            <View style={styles.selectorTab}>
+              <SwitchSelector
+                borderRadius={10}
+                fontSize={13}
+                options={tabs}
+                initial={0}
+                backgroundColor="#00517c"
+                textColor="#4d87a4"
+                selectedColor="white"
+                buttonColor="#00324b"
+                onPress={value => clickHandler(value)}
+              />
+            </View>
+            <View style={styles.lineStyle} />
+            <View style={styles.ListTitle}>
+              <Image source={imageMap[index]} style={{width: 25, height: 25}} />
+              <Text style={styles.textTitle}>{maping[index]}</Text>
+            </View>
+
+            <View style={{height: 520}}>
+              <ScrollView>
                 <View>
-                  <Text style={styles.yesterdayTextStyle}>{item?.day}</Text>
+                  {filteredList?.map((item, index) => (
+                    <View>
+                      <View style={styles.dayWrapper}>
+                        <Text style={styles.dayTextStyle}>{item?.day}</Text>
+                        <View
+                          style={{
+                            flex: 1,
+                            height: 1.5,
+                            backgroundColor: '#126c9f',
+                            marginLeft: 8,
+                          }}
+                        />
+                      </View>
+                      <View></View>
+                      {item.data?.map((item, index) => (
+                        <Item
+                          key={index.key}
+                          title={item.name}
+                          date={item.date}
+                          time={item.time}
+                          tool={item.tool}
+                        />
+                      ))}
+                    </View>
+                  ))}
                 </View>
-                <View
-                  style={{flex: 1, height: 1, backgroundColor: '#407792'}}
-                />
-                {item.data?.map((item, index) => (
-                  <Item
-                    key={index.key}
-                    title={item.name}
-                    date={item.date}
-                    time={item.time}
-                    tool={item.tool}
-                  />
-                ))}
-              </View>
-            ))}
+              </ScrollView>
+            </View>
           </View>
-        </ScrollView>
+        </LinearGradient>
+        <Footer />
       </View>
-      <Footer />
     </View>
   );
 };
@@ -211,20 +233,26 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#004162',
+    backgroundColor: '#fff',
+  },
+  components: {
+    marginLeft: 8,
+    marginRight: 8,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
   },
   selectorTab: {
     backgroundColor: '#00517b',
-    marginTop: 10,
-    marginHorizontal: 23,
+    marginTop: 20,
+    marginHorizontal: 18,
     borderRadius: 18,
-    padding: 8,
+    padding: 4,
   },
   ListTitle: {
     marginTop: 20,
-    marginHorizontal: 30,
-
+    marginHorizontal: 24,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   textTitle: {
     color: '#97b4c2',
@@ -234,9 +262,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   lineStyle: {
-    borderBottomColor: 'white',
+    borderBottomColor: '#1979a5',
     borderBottomWidth: StyleSheet.hairlineWidth,
-
     paddingTop: 20,
   },
   contents: {
@@ -262,27 +289,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 26,
   },
 
-  todayTextStyle: {
-    width: 50,
+  dayTextStyle: {
     textAlign: 'center',
-    color: '#407792',
+    color: '#639fbe',
   },
-  todayWrapper: {
+  dayWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 24,
-    paddingTop: 15,
-  },
-  yesterdayWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 24,
-    paddingTop: 15,
-  },
-  yesterdayTextStyle: {
-    width: 70,
-    textAlign: 'center',
-    color: '#407792',
+    paddingTop: 12,
   },
   icons: {
     flexDirection: 'row',
