@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import fs from 'react-native-fs';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import fs from 'react-native-fs';
 
 const storeData = async (staticArray, staticData, initialLanguage) => {
   try {
@@ -90,7 +90,7 @@ const getData = async initialLanguage => {
 export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async initialLanguage => {
-    const data = getData(initialLanguage);
+    const data = getData(initialLanguage);  
     return data;
   },
 );
@@ -102,13 +102,8 @@ const arraySlice = createSlice({
   extraReducers: {
     [fetchCategories.fulfilled]: (state, action) => {
       state.data = action.payload;
-    },
-    [fetchCategories.pending]: state => {
-      state.status = 'Fetching data. Please wait a moment...';
-    },
-    [fetchCategories.rejected]: state => {
-      state.status = 'Failed to fetch data...';
-    },
+    }
+    
   },
 });
 

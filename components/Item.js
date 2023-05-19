@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, ScrollView, Image} from 'react-native';
 import Header from './header';
-import SwitchSelector from 'react-native-switch-selector';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
 import App from '../drawer';
@@ -16,6 +15,7 @@ const Item = ({title, date, time}) => (
           <View style={styles.icons}>
             <View style={styles.deleteIcon}>
               <Icon
+                testID="trash"
                 style={styles.bookmarkIconStyle}
                 name="trash"
                 size={18}
@@ -24,6 +24,7 @@ const Item = ({title, date, time}) => (
             </View>
             <View>
               <Icon
+                testID="arrow-right"
                 style={styles.bookmarkIconStyle}
                 name="arrow-right"
                 size={18}
@@ -36,11 +37,11 @@ const Item = ({title, date, time}) => (
           <View style={styles.timeContent}>
     
             <View style={styles.timeWrapper}> 
-            <Icon style={styles.bookmarkIconStyle} name="clock-o" size={15} />
+            <Icon testID="clock-o" style={styles.bookmarkIconStyle} name="clock-o" size={15} />
             <Text style={styles.time}>{time}</Text>
             </View>
             <View style={styles.dateWrapper}> 
-            <Icon style={styles.bookmarkIconStyle} name="calendar-o" size={15} />
+            <Icon testID="calendar-o" style={styles.bookmarkIconStyle} name="calendar-o" size={15} />
             <Text style={styles.date}>{date}</Text>
             </View>
           </View>

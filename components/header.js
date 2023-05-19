@@ -5,13 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const Header = () => {
   return (
     <View style={styles.header}>
-      <Icon style={styles.bookmarkIconStyle} name="angle-left" size={22} />
+      <Icon testID="angle" style={styles.bookmarkIconStyle} name="angle-left" size={22} />
       <Text style={styles.headerText}> Bookmark </Text>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   header: {
     flexDirection: 'row',
     justifyContent: 'center',

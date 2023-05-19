@@ -11,15 +11,7 @@ import Header from './header';
 import SwitchSelector from 'react-native-switch-selector';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
-import {NavigationContainer} from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
 import Item from './Item';
-import {log} from 'react-native-reanimated';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchCategories} from '../Redux/categories';
 import translations from '../translations';
