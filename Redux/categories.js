@@ -1,8 +1,8 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import fs from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import fs from 'react-native-fs';
 
-const storeData = async (staticArray, staticData, initialLanguage) => {
+export const storeData = async (staticArray, staticData, initialLanguage) => {
   try {
     if (initialLanguage === 'en') {
       const json = JSON.stringify(staticArray);
@@ -20,7 +20,7 @@ const storeData = async (staticArray, staticData, initialLanguage) => {
   }
 };
 
-const getData = async initialLanguage => {
+export const getData = async initialLanguage => {
   const dataEnglish = await fs.readFileAssets('data/en.json', 'utf8');
   const varEnglish = JSON.parse(dataEnglish);
   const dataFrench = await fs.readFileAssets('data/fr.json', 'utf8');
@@ -65,7 +65,7 @@ const getData = async initialLanguage => {
   }
   const staticArray = varEnglish;
   const staticData = varFrench;
-
+ 
   try {
     const jsonEng = await AsyncStorage.getItem('EngArray');
     const jsonFr = await AsyncStorage.getItem('FrArray');
@@ -91,7 +91,7 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async initialLanguage => {
     const data = getData(initialLanguage);  
-    return data;
+    return data; 
   },
 );
 const arraySlice = createSlice({
@@ -103,7 +103,6 @@ const arraySlice = createSlice({
     [fetchCategories.fulfilled]: (state, action) => {
       state.data = action.payload;
     }
-    
   },
 });
 
