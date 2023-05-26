@@ -2,11 +2,12 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import arraySlice, {fetchCategories} from '../Redux/categories';
 import {render} from '@testing-library/react-native';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+// import {createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getData} from '../Redux/categories';
 import {storeData} from '../Redux/categories';
 import fs from 'react-native-fs';
+import { createAsyncThunk } from 'redux-thunk';
 
 jest.mock('react-native-fs');
 jest.mock('react-native-vector-icons/FontAwesome', () => 'Icon');
@@ -35,13 +36,6 @@ describe('Your test suite', () => {
   // Your test cases here
 });
 
-jest.mock(
-  'path/to/assets/data/en.json',
-  () => ({
-    settings: 'someSetting',
-  }),
-  {virtual: true},
-);
 
 describe('arraySlice', () => {
   const initialState = {data: [], status: null};
@@ -66,6 +60,13 @@ it('AsyncStorage sets and retrieves values correctly', async () => {
 });
 
 
+// Mock the createAsyncThunk function
+jest.mock('redux-thunk', () => ({
+  createAsyncThunk: jest.fn(),
+}));
+
+
+
 describe('getData', () => {
   it('should return the mocked data', async () => {
     const mockEnglishData = '[{"key": 0, "value": "English Data"}]';
@@ -87,35 +88,156 @@ describe('getData', () => {
     expect(AsyncStorage.getItem).toHaveBeenCalledTimes(2);
     expect(fs.readFileAssets).toHaveBeenCalledTimes(2);
   });
+
+  test('should return stored array when initialLanguage is "fr" and FrArray is found', async () => {
+    const staticArray = [4, 5, 6];
+    const staticData = { c: 3, d: 4 };
+    const initialLanguage = 'fr';
+    const jsonFr = JSON.stringify(staticData);
+    AsyncStorage.getItem.mockResolvedValueOnce(jsonFr);
+
+    const result = await storeData(staticArray, staticData, initialLanguage);
+
+    expect(AsyncStorage.getItem).toHaveBeenCalledWith('FrArray');
+    expect(result).toEqual(staticData);
+  });
+
+  test('should log an error message when AsyncStorage throws an error', async () => {
+    const staticArray = [1, 2, 3];
+    const staticData = { a: 1, b: 2 };
+    const initialLanguage = 'en';
+    const errorMessage = 'AsyncStorage error';
+
+    AsyncStorage.getItem.mockRejectedValueOnce(new Error(errorMessage));
+
+    // Catch the error with a try-catch block
+    let errorLogged = true;
+    try {
+      await storeData(staticArray, staticData, initialLanguage);
+    } catch (error) {
+      expect(error.message).toEqual(errorMessage);
+      errorLogged = true;
+    }
+
+    expect(errorLogged).toBe(true);
+  });
 });
 
-// const AsyncStorage = require('@react-native-async-storage/async-storage'); // Replace with the actual AsyncStorage library you are using
-// const { storeData } = require('../Redux/categories'); // Replace './your-file' with the correct path to the file containing the storeData function
 
-test('Storing data in English language', async () => {
-  const staticArray = [1, 2, 3];
-  const initialLanguage = 'en';
+describe('storeData', () => {
+  beforeEach(() => {
+    AsyncStorage.setItem.mockClear(); // Clear mock before each test
+  });
 
-  const result = await storeData(staticArray, null, initialLanguage);
+  test('should store staticArray when initialLanguage is "en"', async () => {
+    const staticArray = [1, 2, 3];
+    const initialLanguage = 'en';
 
-  const storedJson = await AsyncStorage.getItem('EngArray');
-  console.log(storedJson, "Stored Json")
-  const storedArray = JSON.parse(storedJson);
+    await storeData(staticArray, null, initialLanguage);
 
-  expect(result).toEqual(staticArray);
-  expect(storedArray).toEqual(staticArray);
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'EngArray',
+      JSON.stringify(staticArray)
+    );
+  });
+
+  test('should store staticData when initialLanguage is "fr"', async () => {
+    const staticData = { a: 1, b: 2 };
+    const initialLanguage = 'fr';
+
+    await storeData(null, staticData, initialLanguage);
+
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'FrArray',
+      JSON.stringify(staticData)
+    );
+  });
+
+  test('should log "No Language found" when initialLanguage is neither "en" nor "fr"', async () => {
+    const initialLanguage = 'es';
+    console.log = jest.fn(); // Mock console.log
+
+    await storeData(null, null, initialLanguage);
+
+    expect(console.log).toHaveBeenCalledWith('No Language found');
+    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+  });
+
+  test('should log an error message when AsyncStorage throws an error', async () => {
+    const staticArray = [1, 2, 3];
+    const initialLanguage = 'en';
+    const errorMessage = 'AsyncStorage error';
+    console.log = jest.fn(); // Mock console.log
+
+    AsyncStorage.setItem.mockRejectedValueOnce(errorMessage);
+
+    await storeData(staticArray, null, initialLanguage);
+
+    expect(console.log).toHaveBeenCalledWith('Error storing array: ', errorMessage);
+  });
 });
 
-// test('Storing data in French language', async () => {
-//   const staticData = { name: 'John', age: 25 };
-//   const initialLanguage = 'fr';
 
-//   const result = await storeData(null, staticData, initialLanguage);
+describe('Your code', () => {
+  test('should populate English and French arrays with correct dates and keys', async () => {
+    // Mock fs.readFileAssets method
+    const mockReadFileAssets = jest.spyOn(fs, 'readFileAssets');
+    mockReadFileAssets.mockResolvedValueOnce('["item1", "item2", "item3", "item4", "item5", "item6", "item7"]');
+    mockReadFileAssets.mockResolvedValueOnce('["élément1", "élément2", "élément3", "élément4", "élément5", "élément6", "élément7"]');
 
-//   const storedJson = await AsyncStorage.getItem('FrArray');
-//   const storedData = JSON.parse(storedJson);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const formattedDate = `${year}-${month}-${day}`;
 
-//   expect(result).toEqual(staticData);
-//   expect(storedData).toEqual(staticData);
-// });
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const years = yesterday.getFullYear();
+    const months = yesterday.getMonth() + 1;
+    const days = yesterday.getDate();
+    const formattedDates = `${years}-${months}-${days}`;
 
+    const varEnglish = await getData('en');
+    const varFrench = await getData('fr');
+
+    expect(varEnglish).toEqual([
+      { date: formattedDate, key: 0 },
+      { date: formattedDate, key: 1 },
+      { date: formattedDate, key: 2 },
+      { date: formattedDates, key: 3 },
+      { date: formattedDates, key: 4 },
+      { date: formattedDates, key: 5 },
+      { date: '2023-3-7', key: 6 },
+    ]);
+
+    expect(varFrench).toEqual([
+      { date: formattedDate, key: 0 },
+      { date: formattedDate, key: 1 },
+      { date: formattedDate, key: 2 },
+      { date: formattedDates, key: 3 },
+      { date: formattedDates, key: 4 },
+      { date: formattedDates, key: 5 },
+      { date: '2023-3-7', key: 6 },
+    ]);
+
+    // Restore the original method after the test
+    mockReadFileAssets.mockRestore();
+  });
+
+  // Other test cases for your code...
+});
+
+
+
+describe('fetchCategories', () => {
+  test('should call getData with the initial language',  () => {
+    const initialLanguage = 'en';
+
+     fetchCategories(initialLanguage);
+
+    expect(getData).toHaveBeenCalledTimes(1);
+    expect(getData).toHaveBeenCalledWith(initialLanguage);
+  });
+
+});

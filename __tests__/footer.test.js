@@ -1,29 +1,27 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
+import { render, fireEvent } from '@testing-library/react-native';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 import Footer from '../components/footer';
-import {render} from '@testing-library/react-native';
 
 jest.mock('react-native-vector-icons/FontAwesome', () => 'Icon');
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(),
+  DrawerActions: {
+    toggleDrawer: jest.fn(),
+  },
+}));
 
-describe('Footer Component', () => {
-  test('renders correctly', () => {
-    const tree = renderer.create(<Footer />).toJSON();
-    expect(tree).toMatchSnapshot();
+describe('footer', () => {
+  test('should call navigation.dispatch with DrawerActions.toggleDrawer when Spotify icon is pressed', () => {
+    const mockNavigation = { dispatch: jest.fn() };
+    useNavigation.mockReturnValue(mockNavigation);
+
+    const { getByTestId } = render(<Footer />);
+
+    const spotifyIcon = getByTestId('spotify');
+    fireEvent.press(spotifyIcon);
+
+    expect(mockNavigation.dispatch).toHaveBeenCalledWith(DrawerActions.toggleDrawer());
   });
 
-  test('Check if icon is present', () => {
-    const {getByTestId} = render(<Footer />);
-    const spotifyIconElement = getByTestId('spotify');
-    const homeIconElement = getByTestId('home');
-    const clockIconElement = getByTestId('clock-o');
   
-    expect(spotifyIconElement).toBeTruthy();
-    expect(homeIconElement).toBeTruthy();
-    expect(clockIconElement).toBeTruthy();
-  });
 });
-
-
-
-// jest.mock('react-navigation/native', () => 'useNavigation');
-// jest.mock('react-navigation/native', () => 'DrawerActions');

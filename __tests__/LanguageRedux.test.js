@@ -1,15 +1,16 @@
-const { Languagetrans } = require('../Redux/LanguageRedux'); // Replace './your-reducer-file' with the correct path to the file containing the reducer
+const { Languagetrans, langSlice } = require('../Redux/LanguageRedux'); // Replace './your-reducer-file' with the correct path to the file containing the reducer
 
-describe('Languagetrans reducer', () => {
-  test('should update state.data with the payload', () => {
-    // Arrange
-    const initialState = { data: null };
-    const payload = 'English';
+describe('langSlice', () => {
+  test('should update the language data correctly', () => {
+    const initialState = {
+      data: 'en',
+    };
 
-    // Act
-    const newState = Languagetrans(initialState, { payload });
+    const updatedLanguage = 'fr';
 
-    // Assert
-    expect(newState.data).toBe(payload);
+    const nextState = langSlice.reducer(initialState, Languagetrans(updatedLanguage));
+
+    expect(nextState.data).toEqual(updatedLanguage);
   });
+
 });

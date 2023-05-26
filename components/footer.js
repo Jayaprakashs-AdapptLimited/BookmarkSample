@@ -5,7 +5,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {DrawerItem} from 'react-native-paper';
 
 const footer = () => {
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
  
   return (
     <View style={styles.footerIcons}>
@@ -15,7 +15,7 @@ const footer = () => {
           name="spotify"
           size={30}
           color="#999dd9"
-          // onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
         />
       </TouchableOpacity>
       <Icon testID="home" name="home" size={30} color="#9a9dd9" />
