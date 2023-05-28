@@ -12,6 +12,7 @@
   "jest": {
     "preset": "react-native"
   },
+  
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-navigation/drawer": "^6.6.2",
@@ -19,6 +20,9 @@
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/react-native": "^12.1.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.7",
+    "enzyme-to-json": "^3.6.2",
     "react": "18.2.0",
     "react-native": "0.71.4",
     "react-native-fs": "^2.20.0",

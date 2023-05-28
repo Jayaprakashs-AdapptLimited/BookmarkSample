@@ -29,7 +29,7 @@ function MyDrawer() {
   );
 }
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     category: arraySlice,
     language: langSlice,

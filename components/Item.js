@@ -3,7 +3,6 @@ import {Text, View, StyleSheet, ScrollView, Image} from 'react-native';
 import Header from './header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
-import App from '../drawer';
 
 const Item = ({title, date, time}) => (
   <View>
