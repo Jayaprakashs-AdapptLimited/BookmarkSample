@@ -4,12 +4,11 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Image,
+  Image, 
   useWindowDimensions,
 } from 'react-native';
 import Header from './header';
 import SwitchSelector from 'react-native-switch-selector';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Footer from './footer';
 import Item from './Item';
 import {useDispatch, useSelector} from 'react-redux';
@@ -82,7 +81,7 @@ const Home = () => {
   const [filteredList, setFilteredList] = useState([]);
   const dispatch = useDispatch();
 
-  function dataStructure(fetchData) {
+ function dataStructure(fetchData) {
     const value = [
       {
         day: fetchData != null ? 'Today' : [],
@@ -151,7 +150,7 @@ const Home = () => {
     }
   };
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1}} testID="home-component">
       <View style={styles.container}>
         <LinearGradient
           colors={['#004263', '#105c7e', '#408ab3']}
@@ -163,9 +162,10 @@ const Home = () => {
             marginRight: 8,
           }}>
           <View>
-            <Header />
+            <Header testID="header-component"/>
             <View style={styles.selectorTab}>
               <SwitchSelector
+                testID="switch-selector"
                 borderRadius={10}
                 fontSize={13}
                 options={tabs}
@@ -184,7 +184,7 @@ const Home = () => {
             </View>
 
             <View style={{height: 520}}>
-              <ScrollView>
+              <ScrollView testID="item-list">
                 <View>
                   {filteredList?.map((item, index) => (
                     <View>
@@ -216,7 +216,7 @@ const Home = () => {
             </View>
           </View>
         </LinearGradient>
-        <Footer />
+        <Footer testID="footer-component"/>
       </View>
     </View>
   );

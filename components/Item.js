@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, ScrollView, Image} from 'react-native';
-import Header from './header';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Footer from './footer';
 
 const Item = ({title, date, time}) => (
   <View>

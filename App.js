@@ -17,9 +17,9 @@ import arraySlice from './Redux/categories';
 import langSlice from './Redux/LanguageRedux';
 import {CustomDrawerContent} from './components/CustomDrawerContent';
 
-const Drawer = createDrawerNavigator();
+ const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+export function MyDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{headerShown: false}}
