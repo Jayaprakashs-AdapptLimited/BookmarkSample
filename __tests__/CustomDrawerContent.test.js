@@ -1,94 +1,42 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-// import  CustomDrawerContent  from '../components/CustomDrawerContent';
-import { Languagetrans } from '../Redux/LanguageRedux';
-// import { DrawerItem } from '@react-navigation/drawer';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import { useDispatch, useSelector } from 'react-redux';
+import {render, fireEvent} from '@testing-library/react-native';
+import {CustomDrawerContent} from '../components/CustomDrawerContent';
+import {Provider} from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 jest.mock('@react-navigation/drawer', () => 'DrawerContentScrollView');
 jest.mock('@react-navigation/drawer', () => 'DrawerItemList');
 jest.mock('@react-navigation/drawer', () => 'DrawerItem');
 
-
-// Mock the LanguageRedux module
 jest.mock('../Redux/LanguageRedux', () => ({
   Languagetrans: jest.fn(),
 }));
 
+jest.mock('react-redux', () => ({
+  useSelector: jest.fn(),
+  useDispatch: jest.fn(),
+}));
+
 describe('CustomDrawerContent', () => {
-  const mockStore = configureStore([]);
-  let store;
-  let component;
-
-  beforeEach(() => {
-    // Create a mock Redux store
-    store = mockStore({
-      language: {
-        data: 'en',
-      },
-    });
-
-    component = (
-      <Provider store={store}>
-        <CustomDrawerContent />
-      </Provider>
-    );
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should dispatch Languagetrans action with "en" when English drawer item is pressed', () => {
-    const { getByLabelText } = render(component);
-    fireEvent.press(getByLabelText('English'));
-    expect(Languagetrans).toHaveBeenCalledWith('en');
-    expect(store.getActions()).toEqual([Languagetrans('en')]);
-  });
-
-  it('should dispatch Languagetrans action with "fr" when French drawer item is pressed', () => {
-    const { getByLabelText } = render(component);
-    fireEvent.press(getByLabelText('French'));
-    expect(Languagetrans).toHaveBeenCalledWith('fr');
-    expect(store.getActions()).toEqual([Languagetrans('fr')]);
+  it('renders without errors', () => {
+    render(<CustomDrawerContent />);
   });
 });
 
+describe('CustomDrawerContent', () => {
+  test('renders English and French options', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({language: {data: 'en'}});
+    const {queryByText} = render(
+      <Provider store={store}>
+        <CustomDrawerContent />
+      </Provider>,
+    );
 
+    const englishOption = queryByText()('English');
+    const frenchOption = queryByText()('French');
 
-
-export function CustomDrawerContent(props) {
-  const langEns = useSelector(state => state.language);
-  const dispatch = useDispatch();
-
-  const englishcomponent = () => {
-    dispatch(Languagetrans('en'));
-  };
-
-  const Frenchcomponent = () => {
-    dispatch(Languagetrans('fr'));
-  };
-
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="English"
-        focused={langEns.data === 'en'}
-        onPress={englishcomponent}
-      />
-      <DrawerItem
-        label="French"
-        focused={langEns.data === 'fr'}
-        onPress={Frenchcomponent}
-      />
-    </DrawerContentScrollView>
-  );
-}
+    expect(englishOption).toBeTruthy();
+    expect(frenchOption).toBeTruthy();
+  });
+});

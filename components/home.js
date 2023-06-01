@@ -75,7 +75,6 @@ const Home = () => {
 
   const formattedDates = `${years}-${months}-${days}`;
 
-  const route = useRoute();
   const [index, setIndex] = useState(0);
   const [data, setData] = useState([]);
   const [filteredList, setFilteredList] = useState([]);

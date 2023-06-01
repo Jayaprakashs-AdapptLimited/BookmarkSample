@@ -8,7 +8,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {Languagetrans} from '../Redux/LanguageRedux';
 
-export default function CustomDrawerContent(props) {
+export function CustomDrawerContent(props) {
   const langEns = useSelector(state => state.language);
   const dispatch = useDispatch();
   const englishcomponent = () => {
